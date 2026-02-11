@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catch Me If You Can 🐧</title>
+
+    <style>
+      body {
+        margin: 0;
+        height: 100vh;
+        overflow: hidden;
+        font-family: "Comic Sans MS", cursive;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: pink;
+      }
+
+      .container {
+        text-align: center;
+        background: white;
+        padding: 45px;
+        border-radius: 25px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+        max-width: 500px;
+        position: relative;
+      }
+
+      h1 {
+        color: #ff4d88;
+      }
+
+      button {
+        padding: 14px 32px;
+        font-size: 20px;
+        border: none;
+        border-radius: 40px;
+        cursor: pointer;
+        margin: 10px;
+        position: relative;
+      }
+
+      #yesBtn {
+        background-color: #ff4d88;
+        color: white;
+      }
+
+      #noBtn {
+        background-color: #ffd1dc;
+        position: absolute;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>Do you wanna be my Valentine? 🐧💖</h1>
+      <button id="yesBtn" onclick="accept()">Yes 💕</button>
+      <button id="noBtn">No 😢</button>
+    </div>
+
+    <script>
+      const noBtn = document.getElementById("noBtn");
+
+      document.addEventListener("mousemove", (e) => {
+        const x = Math.random() * (window.innerWidth - 100);
+        const y = Math.random() * (window.innerHeight - 50);
+
+        noBtn.style.left = x + "px";
+        noBtn.style.top = y + "px";
+      });
+
+      function accept() {
+        document.body.innerHTML = `
+        <div style="height:100vh;display:flex;justify-content:center;align-items:center;
+        background:url('https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif') center/cover;
+        font-size:35px;color:white;text-align:center;">
+        Awwww 🥰 I knew you’d accept something like that! 💖🐧
+        </div>
+    `;
+      }
+    </script>
+  </body>
+</html>
