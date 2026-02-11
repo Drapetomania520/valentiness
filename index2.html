@@ -63,21 +63,52 @@
     <script>
       const noBtn = document.getElementById("noBtn");
 
-      document.addEventListener("mousemove", (e) => {
-        const x = Math.random() * (window.innerWidth - 100);
-        const y = Math.random() * (window.innerHeight - 50);
+      // put NO at a starting position
+      noBtn.style.left = "260px";
+      noBtn.style.top = "120px";
 
-        noBtn.style.left = x + "px";
-        noBtn.style.top = y + "px";
+      document.addEventListener("mousemove", (e) => {
+        const rect = noBtn.getBoundingClientRect();
+
+        const btnX = rect.left + rect.width / 2;
+        const btnY = rect.top + rect.height / 2;
+
+        const distX = e.clientX - btnX;
+        const distY = e.clientY - btnY;
+
+        const distance = Math.sqrt(distX * distX + distY * distY);
+
+        // Only run away when cursor is close (100px)
+        if (distance < 100) {
+          // Move opposite direction of cursor
+          let moveX = -distX * 0.8;
+          let moveY = -distY * 0.8;
+
+          let newLeft = rect.left + moveX;
+          let newTop = rect.top + moveY;
+
+          // Keep button inside screen
+          newLeft = Math.max(
+            0,
+            Math.min(window.innerWidth - rect.width, newLeft),
+          );
+          newTop = Math.max(
+            0,
+            Math.min(window.innerHeight - rect.height, newTop),
+          );
+
+          noBtn.style.left = newLeft + "px";
+          noBtn.style.top = newTop + "px";
+        }
       });
 
       function accept() {
         document.body.innerHTML = `
-        <div style="height:100vh;display:flex;justify-content:center;align-items:center;
-        background:url('https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif') center/cover;
-        font-size:35px;color:white;text-align:center;">
-        Awwww 🥰 I knew you’d accept something like that! 💖🐧
-        </div>
+    <div style="height:100vh;display:flex;justify-content:center;align-items:center;
+    background:#FF5CCD;
+    font-size:35px;color:white;text-align:center;">
+    Awwww 🥰 I knew you’d accept something like that! 💖🐧
+    </div>
     `;
       }
     </script>
