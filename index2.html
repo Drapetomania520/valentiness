@@ -9,7 +9,7 @@
       body {
         margin: 0;
         height: 100vh;
-        font-family: Arial, Helvetica, sans-serif; /* not cursive */
+        font-family: Arial, Helvetica, sans-serif;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -24,6 +24,7 @@
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
         max-width: 500px;
         position: relative;
+        overflow: hidden; /* IMPORTANT */
       }
 
       .penguin {
@@ -38,6 +39,7 @@
 
       .buttons {
         margin-top: 20px;
+        position: relative;
       }
 
       button {
@@ -47,7 +49,6 @@
         border-radius: 40px;
         cursor: pointer;
         margin: 10px;
-        transition: 0.2s;
       }
 
       #yesBtn {
@@ -57,7 +58,7 @@
 
       #noBtn {
         background-color: #ffd1dc;
-        position: relative; /* start normal */
+        position: relative;
       }
 
       .final-screen {
@@ -106,25 +107,23 @@
 
       let activated = false;
 
-      // YES click
       yesBtn.addEventListener("click", () => {
         mainContent.style.display = "none";
         finalScreen.style.display = "flex";
       });
 
-      // NO runs away when cursor near
       document.addEventListener("mousemove", (e) => {
         const rect = noBtn.getBoundingClientRect();
         const containerRect = container.getBoundingClientRect();
 
-        const btnX = rect.left + rect.width / 2;
-        const btnY = rect.top + rect.height / 2;
+        const btnCenterX = rect.left + rect.width / 2;
+        const btnCenterY = rect.top + rect.height / 2;
 
-        const distX = e.clientX - btnX;
-        const distY = e.clientY - btnY;
-        const distance = Math.sqrt(distX * distX + distY * distY);
+        const dx = e.clientX - btnCenterX;
+        const dy = e.clientY - btnCenterY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 120) {
+        if (distance < 130) {
           if (!activated) {
             activated = true;
             noBtn.style.position = "absolute";
@@ -132,19 +131,25 @@
             noBtn.style.top = rect.top - containerRect.top + "px";
           }
 
-          let moveX = -distX * 0.6;
-          let moveY = -distY * 0.6;
+          const speed = 0.9;
+          let newLeft = noBtn.offsetLeft - dx * speed;
+          let newTop = noBtn.offsetTop - dy * speed;
 
-          let newLeft = noBtn.offsetLeft + moveX;
-          let newTop = noBtn.offsetTop + moveY;
+          // ALWAYS use current button size
+          const btnWidth = noBtn.offsetWidth;
+          const btnHeight = noBtn.offsetHeight;
+
+          // Keep FULLY inside container (20px padding safety)
+          const padding = 20;
 
           newLeft = Math.max(
-            0,
-            Math.min(container.clientWidth - rect.width, newLeft),
+            padding,
+            Math.min(container.clientWidth - btnWidth - padding, newLeft),
           );
+
           newTop = Math.max(
-            0,
-            Math.min(container.clientHeight - rect.height, newTop),
+            padding,
+            Math.min(container.clientHeight - btnHeight - padding, newTop),
           );
 
           noBtn.style.left = newLeft + "px";
