@@ -3,23 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Catch Me If You Can 🐧</title>
+    <title>Be My Valentine 🐧💖</title>
 
     <style>
       body {
         margin: 0;
         height: 100vh;
-        overflow: hidden;
-        font-family: "Comic Sans MS", cursive;
+        font-family: Arial, Helvetica, sans-serif; /* not cursive */
         display: flex;
         justify-content: center;
         align-items: center;
-        background: pink;
+        background-color: #ff5ccd;
       }
 
       .container {
         text-align: center;
-        background: white;
+        background: #fff5f7;
         padding: 45px;
         border-radius: 25px;
         box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
@@ -27,8 +26,18 @@
         position: relative;
       }
 
+      .penguin {
+        width: 170px;
+        margin-bottom: 20px;
+      }
+
       h1 {
+        font-size: 28px;
         color: #ff4d88;
+      }
+
+      .buttons {
+        margin-top: 20px;
       }
 
       button {
@@ -38,7 +47,7 @@
         border-radius: 40px;
         cursor: pointer;
         margin: 10px;
-        position: relative;
+        transition: 0.2s;
       }
 
       #yesBtn {
@@ -48,69 +57,100 @@
 
       #noBtn {
         background-color: #ffd1dc;
-        position: absolute;
+        position: relative; /* start normal */
+      }
+
+      .final-screen {
+        position: fixed;
+        inset: 0;
+        background: url("https://media.giphy.com/media/MDJ9IbxxvDUQM/giphy.gif")
+          center/cover;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: white;
+        font-size: 34px;
+        padding: 20px;
       }
     </style>
   </head>
 
   <body>
-    <div class="container">
+    <div class="container" id="mainContent">
+      <img
+        class="penguin"
+        src="https://media.giphy.com/media/JIX9t2j0ZTN9S/giphy.gif"
+      />
       <h1>Do you wanna be my Valentine? 🐧💖</h1>
-      <button id="yesBtn" onclick="accept()">Yes 💕</button>
-      <button id="noBtn">No 😢</button>
+
+      <div class="buttons">
+        <button id="yesBtn">Yes 💕</button>
+        <button id="noBtn">No 😢</button>
+      </div>
+    </div>
+
+    <div class="final-screen" id="finalScreen">
+      <div>
+        Awwww 🥰 I knew you’d accept something like that! 💖🐧<br /><br />
+        Happy Valentine’s!
+      </div>
     </div>
 
     <script>
       const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+      const container = document.querySelector(".container");
+      const finalScreen = document.getElementById("finalScreen");
+      const mainContent = document.getElementById("mainContent");
 
-      // put NO at a starting position
-      noBtn.style.left = "260px";
-      noBtn.style.top = "120px";
+      let activated = false;
 
+      // YES click
+      yesBtn.addEventListener("click", () => {
+        mainContent.style.display = "none";
+        finalScreen.style.display = "flex";
+      });
+
+      // NO runs away when cursor near
       document.addEventListener("mousemove", (e) => {
         const rect = noBtn.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
 
         const btnX = rect.left + rect.width / 2;
         const btnY = rect.top + rect.height / 2;
 
         const distX = e.clientX - btnX;
         const distY = e.clientY - btnY;
-
         const distance = Math.sqrt(distX * distX + distY * distY);
 
-        // Only run away when cursor is close (100px)
-        if (distance < 100) {
-          // Move opposite direction of cursor
-          let moveX = -distX * 0.8;
-          let moveY = -distY * 0.8;
+        if (distance < 120) {
+          if (!activated) {
+            activated = true;
+            noBtn.style.position = "absolute";
+            noBtn.style.left = rect.left - containerRect.left + "px";
+            noBtn.style.top = rect.top - containerRect.top + "px";
+          }
 
-          let newLeft = rect.left + moveX;
-          let newTop = rect.top + moveY;
+          let moveX = -distX * 0.6;
+          let moveY = -distY * 0.6;
 
-          // Keep button inside screen
+          let newLeft = noBtn.offsetLeft + moveX;
+          let newTop = noBtn.offsetTop + moveY;
+
           newLeft = Math.max(
             0,
-            Math.min(window.innerWidth - rect.width, newLeft),
+            Math.min(container.clientWidth - rect.width, newLeft),
           );
           newTop = Math.max(
             0,
-            Math.min(window.innerHeight - rect.height, newTop),
+            Math.min(container.clientHeight - rect.height, newTop),
           );
 
           noBtn.style.left = newLeft + "px";
           noBtn.style.top = newTop + "px";
         }
       });
-
-      function accept() {
-        document.body.innerHTML = `
-    <div style="height:100vh;display:flex;justify-content:center;align-items:center;
-    background:#FF5CCD;
-    font-size:35px;color:white;text-align:center;">
-    Awwww 🥰 I knew you’d accept something like that! 💖🐧
-    </div>
-    `;
-      }
     </script>
   </body>
 </html>
